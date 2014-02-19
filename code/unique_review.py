@@ -27,8 +27,8 @@ class UniqueReview(MRJob):
         and 1 (the number of words that were unique)."""
 
         unique_reviews = set(review_ids)  # set() uniques an iterator
-        if len(unique_reviews) == 1
-            yield [unique_reviews.next(), 1]
+        if len(unique_reviews) == 1:
+            yield [unique_reviews.pop(), 1]
         ###
         # TODO: yield the correct pair when the desired condition is met:
         # if ___:
@@ -50,7 +50,7 @@ class UniqueReview(MRJob):
         # the same reducer:
         # yield ["MAX", [ ___ , ___]]
         ##/
-        yield ["MAX", [review_id , unique_word_count]]
+        yield ["MAX", [unique_word_count , review_id]]
 
     def select_max(self, stat, count_review_ids):
         """Given a list of pairs: [count, review_id], select on the pair with
@@ -61,13 +61,14 @@ class UniqueReview(MRJob):
         # number
         #
         #/
+        yield max(count_review_ids)
 
 
     def steps(self):
         """TODO: Document what you expect each mapper and reducer to produce:
-        mapper1: <line, record> => <key, value>
-        reducer1: <key, [values]>
-        mapper2: ...
+        extract_words: <line, record> => <review id, word>
+        count_reviews: <unique review id, [count]>
+        count_unique_words: <review id, counts> => <review id, total>
         """
         return [
             self.mr(self.extract_words, self.count_reviews),
