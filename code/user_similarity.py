@@ -21,9 +21,15 @@ class UserSimilarity(MRJob):
             yield [record['user_id'], record['business_id']]
 
     def business_set(self, uid, bid): #[user_id, business_id]
-        business_ids = set(bid)
-        print "uid: %s bid: %s" % (str(uid), str(len(business_ids)))
-        yield [uid, business_ids] 
+        business_ids = list(set(bid))
+        yield ["SETS", [uid, business_ids]] 
+
+    def jaccard(self, stat, user_business_ids):
+#        print user_business_ids[1]
+        yield user_business_ids
+#jaccard = union / intersect
+#yield [user_business_ids['uid'], jaccard_index]]
+
 
     def steps(self):
         """TODO: Document what you expect each mapper and reducer to produce:
@@ -33,6 +39,7 @@ class UserSimilarity(MRJob):
         """
         return [
             self.mr(self.extract_business, self.business_set),
+            self.mr(self.jaccard),
 #            self.mr(mapper=self.mapper1, reducer=self.reducer1),
 #            self.mr(mapper=...),
         ]
