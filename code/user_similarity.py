@@ -24,11 +24,21 @@ class UserSimilarity(MRJob):
         business_ids = list(set(bid))
         yield ["SETS", [uid, business_ids]] 
 
-    def jaccard(self, stat, user_business_ids):
-#        print user_business_ids[1]
-        yield user_business_ids
-#jaccard = union / intersect
-#yield [user_business_ids['uid'], jaccard_index]]
+    def jaccard_index(self, _, user_business_ids):
+        ubi = list(user_business_ids)
+        for user_a, bid_a in ubi:
+            for user_b, bid_b in ubi:
+                if user_a < user_b:
+                    index = self.jaccard(bid_a, bid_b)
+                    if index >= 0.5:
+                        yield [(user_a, user_b), index]
+
+    def jaccard(self, a, b):
+        a = set(a)
+        b = set(b)
+        intersection = a & b
+        union = a | b
+        return float(len(intersection)) / float(len(union))
 
 
     def steps(self):
@@ -39,7 +49,7 @@ class UserSimilarity(MRJob):
         """
         return [
             self.mr(self.extract_business, self.business_set),
-            self.mr(self.jaccard),
+            self.mr(reducer=self.jaccard_index),
 #            self.mr(mapper=self.mapper1, reducer=self.reducer1),
 #            self.mr(mapper=...),
         ]
