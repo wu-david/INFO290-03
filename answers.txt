@@ -1,0 +1,33 @@
+Using Berkeley Student Courses API
+
+1. Course Description, Course Number, Course Title, Course UID, Department Code, Lower Units, Sub-Department Code, Upper Units, uri
+2. Not using data set
+3. Limits of fetching data - Must be berkeley student or filled out application. Limited to json or xml output. 
+
+4. Below is the response body from the API call. It's interesting because it's the information for our class. Properties of the response:
+    courseDescription - course description shown on course schedule
+    courseNumber - course number/code
+    courseTitle - the title of the course
+    courseUID - course identification number
+    departmentCode - department code
+    lowerUnits - minimum number of units you can take
+    subDepartmentCode - subdepartment code (same as department code if not a subdepartment)
+    upperUnits - maximum number of units you can take
+    uri - uniform resource identifier
+
+"CanonicalCourse": [
+  {
+         "courseDescription": "Specific topics, hours, and credit may vary from section to section and year to year.",
+                "courseNumber": "290T",
+                   "courseTitle": "Special Topics in Technology",
+                      "courseUID": "INFO.290T",
+                         "departmentCode": "INFO",
+                            "lowerUnits": 1,
+                               "subDepartmentCode": "INFO",
+                                  "upperUnits": 4,
+                                     "uri": "https://apis-dev.berkeley.edu/cxf/asws/course/INFO.290T"
+                                           }
+
+5.  a) How many units can I take a class for?
+    b) What is the course about?
+    c) What is the course number?
