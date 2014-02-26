@@ -20,6 +20,10 @@ CANDIDATES = {
 
 ############### Set up variables
 # TODO: declare datastructures
+obama = 0.0
+romney = 0.0
+zip_dict = {}
+total = 0.0
 
 ############### Read through files
 for row in csv.reader(fileinput.input(), delimiter='|'):
@@ -29,14 +33,24 @@ for row in csv.reader(fileinput.input(), delimiter='|'):
 
     candidate_name = CANDIDATES[candidate_id]
     zip_code = row[ZIP_CODE]
+
     ###
     # TODO: save information to calculate Gini Index
     ##/
+    if candidate_name == 'Obama':
+        obama += 1.0
+    else:
+        romney += 1.0
+    if zip_code in zip_dict:
+        zip_dict[zip_code] += 1.0
+    else:
+        zip_dict[zip_code] = 1.0
+    total += 1.0
 
 ###
 # TODO: calculate the values below:
-gini = 0  # current Gini Index using candidate name as the class
-split_gini = 0  # weighted average of the Gini Indexes using candidate names, split up by zip code
+gini = 1.0 - ((obama/total)**2 + (romney/total)**2)  # current Gini Index using candidate name as the class
+split_gini = 1.0 - sum([(frac/total)**2 for frac in zip_dict.values()])  # weighted average of the Gini Indexes using candidate names, split up by zip code
 ##/
 
 print "Gini Index: %s" % gini
