@@ -48,10 +48,3 @@ split_gini = sum([weight(value.values()) * gini_index(value.values()) for value 
 
 print "Gini Index: %s" % gini
 print "Gini Index after split: %s" % split_gini
-
-"""
-OUTPUT:
-Gini Index: 0.487709185938
-Gini Index after split: 0.414381001914
-"""
-
