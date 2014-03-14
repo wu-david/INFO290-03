@@ -12,6 +12,8 @@ class UniqueReview(MRJob):
     def extract_words(self, _, record):
         """Take in a record, yield <word, review_id>"""
         if record['type'] == 'review':
+            for word in WORD_RE.findall(record['text']):
+                yield [word.lower(), record['review_id']]
             ###
             # TODO: for each word in the review, yield the correct key,value
             # pair:
@@ -25,6 +27,8 @@ class UniqueReview(MRJob):
         and 1 (the number of words that were unique)."""
 
         unique_reviews = set(review_ids)  # set() uniques an iterator
+        if len(unique_reviews) == 1:
+            yield [unique_reviews.pop(), 1]
         ###
         # TODO: yield the correct pair when the desired condition is met:
         # if ___:
@@ -33,6 +37,7 @@ class UniqueReview(MRJob):
 
     def count_unique_words(self, review_id, unique_word_counts):
         """Output the number of unique words for a given review_id"""
+        yield [review_id, sum(unique_word_counts)]
         ###
         # TODO: summarize unique_word_counts and output the result
         #
@@ -45,6 +50,7 @@ class UniqueReview(MRJob):
         # the same reducer:
         # yield ["MAX", [ ___ , ___]]
         ##/
+        yield ["MAX", [unique_word_count , review_id]]
 
     def select_max(self, stat, count_review_ids):
         """Given a list of pairs: [count, review_id], select on the pair with
@@ -55,12 +61,14 @@ class UniqueReview(MRJob):
         # number
         #
         #/
+        yield max(count_review_ids)
+
 
     def steps(self):
         """TODO: Document what you expect each mapper and reducer to produce:
-        mapper1: <line, record> => <key, value>
-        reducer1: <key, [values]>
-        mapper2: ...
+        extract_words: <line, record> => <review id, word>
+        count_reviews: <unique review id, [count]>
+        count_unique_words: <review id, counts> => <review id, total>
         """
         return [
             self.mr(self.extract_words, self.count_reviews),
