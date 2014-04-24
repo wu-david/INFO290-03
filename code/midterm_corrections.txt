@@ -1,0 +1,15 @@
+2. Positive skew not high/right skew
+
+3. Negative skew not low/left skew
+
+5. ETL = Extract Transform Load. It refers to a process in database usage and data warehousing that extracts data from outside sources, transforms it to fit operational needs, and loads it into an end sink such as a data warehouse.
+
+7. A rollup involves summarizing the data along a dimension. (Book) One example may be to find the total number of views of a given page.
+
+8. Correct ordering: 1,5,2,7,6,4,3. Want to prepare the training data then set aside a hold-out set to prepare your data before you build a classifier. The training data is to crreate the classifier and the hold-out set is to test/validate the classifier. (Book) Next you want to teach the classifier with the training data and verify with the testing data. After validation, save the model parameters so you can utilize the model for future predictions. Input unlabeled new data into the model and output guesses on new data to use the model.
+
+11. The step size is too large so our model does not converge on a solution --> our model will run forever
+
+15. In the map phase, split the buusiness record into a key-value pair where a category is the key and a tuple of average stars and number of reviews. In the reduce step, take that key-value pair and find the average stars found across all the records we processed earlier.
+
+
