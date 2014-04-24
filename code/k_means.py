@@ -25,24 +25,26 @@ def pick_centroids(xs, num):
     """Return list of num centroids given a list of numbers in xs"""
     ###
     # TODO select and return centroids
-    return [1, 2]
     ##/
+    step = len(xs) / num
+    l = [xs[i:i+step] for i in range(0, len(xs), step)]
+    return [centroid(tmp) for tmp in l]
 
 
 def distance(a, b):
     """Return the distance of numbers a and b"""
     ###
     # TODO return correct expression
-    return 0
     ##/
+    return abs(a - b)
 
 
 def centroid(xs):
     """Return the centroid number given a list of numbers, xs"""
     ###
     # TODO calculate and return centroid
-    return 0
     ##/
+    return sum(xs) / float(len(xs))
 
 
 def cluster(xs, centroids):
