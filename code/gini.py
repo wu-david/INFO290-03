@@ -5,6 +5,7 @@ Classes are strings."""
 
 import fileinput
 import csv
+from collections import *
 
 (
     CMTE_ID, AMNDT_IND, RPT_TP, TRANSACTION_PGI, IMAGE_NUM, TRANSACTION_TP,
@@ -20,24 +21,30 @@ CANDIDATES = {
 
 ############### Set up variables
 # TODO: declare datastructures
-
+zip_dict = {}
+candidate_dict = {candidate: 0 for candidate in CANDIDATES.itervalues()}
+total = 0.0
 ############### Read through files
 for row in csv.reader(fileinput.input(), delimiter='|'):
     candidate_id = row[CAND_ID]
     if candidate_id not in CANDIDATES:
         continue
-
     candidate_name = CANDIDATES[candidate_id]
     zip_code = row[ZIP_CODE]
-    ###
-    # TODO: save information to calculate Gini Index
-    ##/
+    candidate_dict[candidate_name] += 1
+    zip_dict.setdefault(zip_code, defaultdict(int))[candidate_name] += 1
+    total += 1.0
 
-###
-# TODO: calculate the values below:
-gini = 0  # current Gini Index using candidate name as the class
-split_gini = 0  # weighted average of the Gini Indexes using candidate names, split up by zip code
-##/
+def gini_index(values):
+    total = float(sum(values))
+    return 1 - sum([(float(value) / total) ** 2 for value in values])
+
+def weight(value):
+    return float(sum(value)) / total
+
+
+gini = gini_index(candidate_dict.values()) # current Gini Index using candidate name as the class
+split_gini = sum([weight(value.values()) * gini_index(value.values()) for value in zip_dict.itervalues()]) # weighted average of the Gini Indexes using candidate names, split up by zip code
 
 print "Gini Index: %s" % gini
 print "Gini Index after split: %s" % split_gini

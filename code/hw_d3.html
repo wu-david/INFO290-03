@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> D3 page template </title>
+        <script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> 
+    </head>
+
+    <body>
+        <script type="text/javascript">
+	  //Setup local variables.
+	  var w = 500;
+	  var h = 400;
+	  var barPadding = 20;
+	  var padding = 50;
+	    
+	  //Set up our dataset.
+	  var dataset = [ 15, 12, 21, 42, 12, 10, 5, 85 ];
+	    
+	  //Define your scales here
+	  var xScale = d3.scale.linear()
+	    .domain([0, dataset.length])
+	    .range([padding,(w-padding)]); 
+	    
+	  var widthScale = d3.scale.linear()
+	    .domain([0, dataset.length])
+	    .range([0, (w-2*padding)]);  
+	    
+	  var yScale = d3.scale.linear()
+	    .domain([0, d3.max(dataset)])
+	    .range([h-padding,padding]);
+
+	  var heightScale = d3.scale.linear()
+	    .domain([0, d3.max(dataset)])
+	    .range([0,h-2*padding]);
+	    
+	  //Clear out old content, then create an svg element that's w x h in size.
+	  d3.select("body").selectAll("*").remove();  
+	    
+	  var svg = d3.select("body")
+	    .append("svg")
+	    .attr("width", w)
+	    .attr("height", h);
+	    
+	  //Bind our data to SVG and create a rectangle for each one
+	  //This is where the magic happens!
+	  var bars = svg.selectAll("rect")
+	    .data(dataset)
+	    .enter()
+	    .append("rect");
+	    
+	  //For each bar, set its attributes as a function of its position
+	  //in the dataset and 
+	  bars.attr("x", function(d, i) { return xScale(i); })
+	    .attr("y", function(d) { return yScale(d); })
+	    .attr("width", widthScale(0.8))
+	    .attr("height", function(d) { return heightScale(d); })
+	    .attr("fill", "teal");
+	    
+	  //Create a tooltip.
+	  var tip = d3.select("body")
+	    .append("div")
+	    .attr("id", "tooltip");
+	    
+	  tip.append("p")
+	    .attr("id", "value")
+	    .style("text-align", "center");
+	  
+	  tip.style("width", "30px")
+	    .style("background-color", "white")
+	    .style("position", "absolute")
+	    .style("border", "2px solid");
+	  
+	    svg.selectAll("rect").on("mouseover", function(d,i) {
+	    tip
+	      .style("left", (padding+xScale(i))+"px")
+	      .style("top", yScale(d/2)+"px")
+	      .style("display", null)
+	      .select("#value")
+	      .text(d);
+	    
+	    d3.select(this).attr("fill", "red");
+	  }).on("mouseout", function(d,i) {
+	    tip.style("display", "none");
+	      
+	    d3.select(this).attr("fill", "teal");
+	  })
+        </script>
+    </body>
+</html>
+
